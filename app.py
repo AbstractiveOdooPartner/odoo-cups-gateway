@@ -27,7 +27,7 @@ if __name__ == "__main__":
     odoo = ODOO(ODOO_HOST, ODOO_PROTOCOL, ODOO_PORT)
     odoo.login(ODOO_DB, ODOO_USER, ODOO_PASSWORD)
     connection = cups.Connection()
-    jobs_waiting = odoo.env["printer.queue"].search([["printed_on", "!=", False]])
+    jobs_waiting = odoo.env["printer.queue"].search([["printed_on", "=", False]])
     logger.info(f"Jobs waiting: {jobs_waiting}")
 
     while True:
@@ -36,7 +36,7 @@ if __name__ == "__main__":
             # odoo.json("/longpolling/poll", {"channels": ["printer_queue"], "last": 0})
             time.sleep(5)
             job_ids = odoo.env["printer.queue"].search(
-                [["printed_by", "in", [False, ""]]]
+                [["printed_on", "=", False]]
             )
         else:
             job_ids = jobs_waiting.copy()
